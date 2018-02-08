@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -30,6 +31,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationListener locationListener;
     private double latitud;
     private double longitud;
+
+    private double distancia;
+
+    public double getDistancia() {
+        return distancia;
+    }
+
+    Marker m1=null;
+    private double latitudM2;
+    private double longitudM2;
+
+    public double getLatitudM2() {
+        return latitudM2;
+    }
+
+    public double getLongitudM2() {
+        return longitudM2;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +116,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng actual = new LatLng(latitud, longitud);
                 //Eliminar todas las marcas en el mapa
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual"+latitud).snippet("Esta es la posicion actual del usuario"+longitud));
+                mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
                 //Mover la camara a la posicion actual (Por default esta en las cordenadas 0,0// )
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 15));
-                Toast.makeText(MapsActivity.this,"Latitud: "+latitud+ " Longitud: "+longitud, Toast.LENGTH_LONG);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 1));
+                //Manda llamar la ventana de detalles de informacion
+                mMap.setInfoWindowAdapter(new InfoWindow(getLayoutInflater()));
+                //Toast.makeText(MapsActivity.this,"Latitud: "+latitud+ " Longitud: "+longitud, Toast.LENGTH_LONG);
+
+                //evento que captura otra marca en el mapa
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                       mMap.clear();
+                        LatLng actual = new LatLng(latitud, longitud);
+                        mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
+                        //Mover la camara a la posicion actual (Por default esta en las cordenadas 0,0// )
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 1));
+                        //Manda llamar la ventana de detalles de informacion
+                        mMap.setInfoWindowAdapter(new InfoWindow(getLayoutInflater()));
+
+                        m1=mMap.addMarker(new MarkerOptions().position(latLng).title("Estga es la marcadefinida por el usuario").snippet("Esta es la nueva marca Marca 2"));
+
+                        MapsActivity.this.latitudM2=latLng.latitude;
+                        MapsActivity.this.longitudM2=latLng.longitude;
+                        Location locActual = new Location("Actual");
+                        locActual.setLatitude(latitud);
+                        locActual.setLongitude(longitud);
+
+                        Location locMaarca2 = new Location("Marca dos");
+                        locMaarca2.setLatitude(getLatitudM2());
+                        locMaarca2.setLongitude(getLongitudM2());
+                        //Distancia en metros de la marca 2
+                        MapsActivity.this.distancia= locActual.distanceTo(locMaarca2);
+
+                    }
+                });
             }
 
             @Override
