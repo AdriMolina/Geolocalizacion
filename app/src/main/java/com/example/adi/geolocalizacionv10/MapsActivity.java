@@ -154,7 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
-                       //mMap.clear();
+                       mMap.clear();
                         //agregar la marca anterior
                         LatLng actual = new LatLng(latitud, longitud);
                         mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
