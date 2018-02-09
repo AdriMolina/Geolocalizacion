@@ -114,15 +114,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //Poner los controles de zoom en el mapa
+        //Poner los con troles de zoom en el mapa
         mMap.getUiSettings().setZoomControlsEnabled(true);
         //herramientas adicionales del mapa
         mMap.getUiSettings().setMapToolbarEnabled(true);
         //zoom con los toques en la pantalla
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         //tipo de mapa
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-       
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -130,20 +130,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationChanged(Location location) {
                 latitud = location.getLatitude();
                 longitud = location.getLongitude();
-               // setLatLong(location.getLongitude(), location.getLatitude());
+               //setLatLong(location.getLongitude(), location.getLatitude());
                 //Variable para añadir en el mapa la direccion
                 LatLng actual = new LatLng(latitud, longitud);
                 //Eliminar todas las marcas en el mapa
-                mMap.clear();
+               // mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
                 //Mover la camara a la posicion actual (Por default esta en las cordenadas 0,0// )
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 10));
+                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 10));
                 //Manda llamar la ventana de detalles de informacion
                 mMap.setInfoWindowAdapter(new InfoWindow(getLayoutInflater()));
                 //Toast.makeText(MapsActivity.this,"Latitud: "+latitud+ " Longitud: "+longitud, Toast.LENGTH_LONG);
 
+
+                //nueva captura de otra marca
+                mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                    @Override
+                    public void onMapLongClick(LatLng latLng) {
+
+                    }
+                });
                 //evento que captura otra marca en el mapa
-                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+               mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
                        //mMap.clear();
