@@ -62,11 +62,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Button botonDistancia = (Button)findViewById(R.id.botonDistancia);
+        Button botonDistancia = (Button)findViewById(R.id.btnDistancia);
         botonDistancia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MapsActivity.this, "Esta es la distancia: "+getDistancia()+" metros", Toast.LENGTH_LONG);
+                Toast.makeText(MapsActivity.this, "Esta es la distancia", Toast.LENGTH_LONG);
             }
         });
     }
