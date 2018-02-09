@@ -13,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,16 +33,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationListener locationListener;
     private double latitud;
     private double longitud;
-
+    Marker m1=null;
+    private double latitudM2;
+    private double longitudM2;
     private double distancia;
+
 
     public double getDistancia() {
         return distancia;
     }
 
-    Marker m1=null;
-    private double latitudM2;
-    private double longitudM2;
+
 
     public double getLatitudM2() {
         return latitudM2;
@@ -58,6 +61,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Button botonDistancia = (Button)findViewById(R.id.botonDistancia);
+        botonDistancia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MapsActivity.this, "Esta es la distancia: "+getDistancia()+" metros", Toast.LENGTH_LONG);
+            }
+        });
     }
 
     //Metodo que verifica si tenemos permiso de gps en el telefono celular
@@ -103,7 +114,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        //Poner los controles de zoom en el mapa
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        //herramientas adicionales del mapa
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+        //zoom con los toques en la pantalla
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        //tipo de mapa
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+       
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -118,7 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
                 //Mover la camara a la posicion actual (Por default esta en las cordenadas 0,0// )
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 1));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 10));
                 //Manda llamar la ventana de detalles de informacion
                 mMap.setInfoWindowAdapter(new InfoWindow(getLayoutInflater()));
                 //Toast.makeText(MapsActivity.this,"Latitud: "+latitud+ " Longitud: "+longitud, Toast.LENGTH_LONG);
@@ -127,15 +146,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
-                       mMap.clear();
+                       //mMap.clear();
+                        //agregar la marca anterior
                         LatLng actual = new LatLng(latitud, longitud);
                         mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
                         //Mover la camara a la posicion actual (Por default esta en las cordenadas 0,0// )
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 1));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 10));
                         //Manda llamar la ventana de detalles de informacion
                         mMap.setInfoWindowAdapter(new InfoWindow(getLayoutInflater()));
 
-                        m1=mMap.addMarker(new MarkerOptions().position(latLng).title("Estga es la marcadefinida por el usuario").snippet("Esta es la nueva marca Marca 2"));
+                        //Agregar una marca nueva
+                        m1=mMap.addMarker(new MarkerOptions().position(latLng).title("Estga es la nueva marca").snippet("Esta es la nueva marca Marca 2"));
 
                         MapsActivity.this.latitudM2=latLng.latitude;
                         MapsActivity.this.longitudM2=latLng.longitude;
