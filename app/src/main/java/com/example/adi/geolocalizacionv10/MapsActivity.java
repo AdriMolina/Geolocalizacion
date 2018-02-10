@@ -57,6 +57,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -66,7 +68,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         botonDistancia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MapsActivity.this, "Esta es la distancia", Toast.LENGTH_LONG);
+                double resultado = getDistancia();
+                Toast.makeText(MapsActivity.this, "Esta es la distancia: "+resultado, Toast.LENGTH_LONG);
             }
         });
     }
@@ -159,7 +162,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         LatLng actual = new LatLng(latitud, longitud);
                         mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
                         //Mover la camara a la posicion actual (Por default esta en las cordenadas 0,0// )
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 10));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 15));
                         //Manda llamar la ventana de detalles de informacion
                         mMap.setInfoWindowAdapter(new InfoWindow(getLayoutInflater()));
 
