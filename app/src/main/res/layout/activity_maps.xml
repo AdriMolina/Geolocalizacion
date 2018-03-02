@@ -8,10 +8,5 @@
     android:layout_height="match_parent"
     tools:context="com.example.adi.geolocalizacionv10.MapsActivity" >
 
-    <Button
-        android:id="@+id/btnDistancia"
-        android:layout_width="match_parent"
-        android:drawableBottom="@color/colorPrimary"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+
     </fragment>

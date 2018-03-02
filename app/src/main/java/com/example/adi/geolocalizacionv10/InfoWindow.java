@@ -36,15 +36,7 @@ public class InfoWindow implements GoogleMap.InfoWindowAdapter {
         view=(TextView)info.findViewById(R.id.snippet);
         view.setText(marker.getSnippet());
 
-        final int clicks = 0;
-       final Button boton = (Button)info.findViewById(R.id.Calcular_distancia);
-        boton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View view) {
-                    boton.setText("Has pulsado el boton "+clicks);
-                 }
-        });
         return info;
     }
 }

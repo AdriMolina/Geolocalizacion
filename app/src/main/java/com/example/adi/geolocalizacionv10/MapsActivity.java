@@ -33,7 +33,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationListener locationListener;
     private double latitud;
     private double longitud;
-    Marker m1=null;
+    Marker m1 = null;
     private double latitudM2;
     private double longitudM2;
     private double distancia;
@@ -42,7 +42,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public double getDistancia() {
         return distancia;
     }
-
 
 
     public double getLatitudM2() {
@@ -64,21 +63,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Button botonDistancia = (Button)findViewById(R.id.btnDistancia);
+      /*  Button botonDistancia = (Button) findViewById(R.id.btnDistancia);
         botonDistancia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 double resultado = getDistancia();
-                Toast.makeText(MapsActivity.this, "Esta es la distancia: "+resultado, Toast.LENGTH_LONG);
+                Toast.makeText(MapsActivity.this, "Esta es la distancia: " + resultado, Toast.LENGTH_LONG);
             }
-        });
+        });*/
     }
 
     //Metodo que verifica si tenemos permiso de gps en el telefono celular
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch ((requestCode)){
+        switch ((requestCode)) {
             case 10:
                 geolocalizar();
                 break;
@@ -86,21 +85,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
         }
     }
-//vrifica si tiene permisos
-    public void geolocalizar(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
 
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.INTERNET}, 10);
-                }
-                return;
+    //vrifica si tiene permisos
+    public void geolocalizar() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.INTERNET}, 10);
+            }
+            return;
         }
 
-        locationManager.requestLocationUpdates("gps",0,0,locationListener);
+        locationManager.requestLocationUpdates("gps", 0, 0, locationListener);
     }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -110,13 +111,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    public void setLatLong(double latitud, double longitud){
-        this.latitud=latitud;
-        this.longitud=longitud;
+    public void setLatLong(double latitud, double longitud) {
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
         //Poner los con troles de zoom en el mapa
         mMap.getUiSettings().setZoomControlsEnabled(true);
         //herramientas adicionales del mapa
@@ -125,22 +138,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         //tipo de mapa
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             //Captura el evento de cambio de localizacion
             public void onLocationChanged(Location location) {
+                //mMap.clear();
                 latitud = location.getLatitude();
                 longitud = location.getLongitude();
                //setLatLong(location.getLongitude(), location.getLatitude());
                 //Variable para añadir en el mapa la direccion
                 LatLng actual = new LatLng(latitud, longitud);
                 //Eliminar todas las marcas en el mapa
-               // mMap.clear();
+
                 mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
                 //Mover la camara a la posicion actual (Por default esta en las cordenadas 0,0// )
-                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 10));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(actual, 10));
                 //Manda llamar la ventana de detalles de informacion
                 mMap.setInfoWindowAdapter(new InfoWindow(getLayoutInflater()));
                 //Toast.makeText(MapsActivity.this,"Latitud: "+latitud+ " Longitud: "+longitud, Toast.LENGTH_LONG);
@@ -157,7 +170,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
-                       mMap.clear();
+             //          mMap.clear();
                         //agregar la marca anterior
                         LatLng actual = new LatLng(latitud, longitud);
                         mMap.addMarker(new MarkerOptions().position(actual).title("Ubicacion Actual").snippet("Esta es la posicion actual del usuario"));
@@ -180,6 +193,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         locMaarca2.setLongitude(getLongitudM2());
                         //Distancia en metros de la marca 2
                         MapsActivity.this.distancia= locActual.distanceTo(locMaarca2);
+
 
                     }
                 });
